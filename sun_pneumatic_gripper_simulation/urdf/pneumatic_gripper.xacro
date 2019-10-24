@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<!--    
+    MACRO to generate pneumatic_gripper
+    prefix = name to use as prefix (default '')
+    scale = unit scale, 1.0 = [m] (default 1.0)
+    base_link = base link of the gripper (default base_link)
+
+    the gripper base link will be ${prefix}${base_link}
+-->
+
+<xacro:macro 
+    name="pneumatic_gripper" 
+    params="
+        prefix:=''
+        scale:=1.0
+        base_link:=base_link
+        create_sucker1_frame:=true
+        create_sucker2_frame:=true
+        create_sucker3_frame:=true
+	create_central_frame:=true	
+        "
+>
+
+    <!-- cad_scale to convert from cad to [m] -->
+    <xacro:property name="cad_scale" value="0.001"/>
+    <!-- local_scale cad to input scale -->
+    <xacro:property name="local_scale" value="${cad_scale*scale}"/>
+    <xacro:property name="local_scale_collision" value="${cad_scale*scale}"/>
+    <!-- origin of mesh wrt link frame -->
+    <xacro:property name="pneumatic_gripper_mesh_origin">
+        <origin 
+            xyz="${0.0*local_scale} ${0.0*local_scale} ${0.0*local_scale}" 
+            rpy="${0.0} ${0.0} ${0.0}" 
+        />
+    </xacro:property>
+
+    <!-- pneumatic_gripper base_link of the gripper -->
+    <link name="${prefix}${base_link}">
+        <visual>
+            <xacro:insert_block name="pneumatic_gripper_mesh_origin" />
+            <geometry>
+                <mesh 
+                    filename="package://sun_pneumatic_gripper_simulation/meshes/visual/pneumatic_gripper.stl" 
+                    scale="${local_scale} ${local_scale} ${local_scale}"
+                />
+            </geometry>
+            <material name="gray">
+                <color rgba="0.5 0.5 0.5 1"/>
+            </material>
+        </visual>
+        <collision>
+            <xacro:insert_block name="pneumatic_gripper_mesh_origin" />
+            <geometry>
+                <mesh 
+                    filename="package://sun_pneumatic_gripper_simulation/meshes/collision/pneumatic_gripper.stl" 
+                    scale="${local_scale_collision} ${local_scale_collision} ${local_scale_collision}"
+                />
+            </geometry>
+        </collision>
+    </link> <!-- end pneumatic_gripper base link -->
+
+    <!-- sucker1 frame -->
+    <xacro:if value="${create_sucker1_frame}">
+        <link name="${prefix}sucker1_frame" />
+        <joint name="${prefix}${base_link}-sucker1_frame" type="fixed">
+            <parent link="${prefix}${base_link}" />
+            <child link="${prefix}sucker1_frame" />
+            <origin xyz="${0.014*scale} ${-0.008*scale} ${0.135*scale}" rpy="0 0 0" />
+        </joint>
+    </xacro:if>
+
+    <!-- sucker2 frame -->
+    <xacro:if value="${create_sucker2_frame}">
+        <link name="${prefix}sucker2_frame" />
+        <joint name="${prefix}${base_link}-sucker2_frame" type="fixed">
+            <parent link="${prefix}${base_link}" />
+            <child link="${prefix}sucker2_frame" />
+            <origin xyz="${-0.014*scale} ${-0.008*scale} ${0.135*scale}" rpy="0 0 0" />
+        </joint>
+    </xacro:if>
+
+    <!-- sucker3 frame -->
+    <xacro:if value="${create_sucker3_frame}">
+        <link name="${prefix}sucker3_frame" />
+        <joint name="${prefix}${base_link}-sucker3_frame" type="fixed">
+            <parent link="${prefix}${base_link}" />
+            <child link="${prefix}sucker3_frame" />
+            <origin xyz="0 ${0.016*scale} ${0.135*scale}" rpy="0 0 0" />
+        </joint>
+    </xacro:if>
+
+    <!-- central frame -->
+    <xacro:if value="${create_central_frame}">
+        <link name="${prefix}central_frame" />
+        <joint name="${prefix}${base_link}-central_frame" type="fixed">
+            <parent link="${prefix}${base_link}" />
+            <child link="${prefix}central_frame" />
+            <origin xyz="0 0 ${0.135*scale}" rpy="0 0 0" />
+        </joint>
+    </xacro:if>
+
+
+</xacro:macro> <!-- end pneumatic_gripper macro -->
+
+</robot>

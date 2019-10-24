@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<robot name="pneumatic_gripper" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Import pneumatic_gripper macro -->
+  <xacro:include filename="$(find sun_pneumatic_gripper_simulation)/urdf/pneumatic_gripper.xacro" />
+  
+  <xacro:pneumatic_gripper 
+    scale="1.0"
+    base_link="base_link"
+    create_sucker1_frame="true"
+    create_sucker2_frame="true"
+    create_sucker3_frame="true"
+    create_central_frame="true"
+  />
+
+</robot>

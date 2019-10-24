@@ -1,0 +1,16 @@
+<launch>
+
+  <arg name="model" 
+    default="$(find sun_pneumatic_gripper_simulation)/urdf/pneumatic_gripper.urdf.xacro"
+  />
+  <arg name="gui" default="true" />
+  <arg name="rvizconfig" default="$(find sun_pneumatic_gripper_simulation)/rviz/display_pneumatic_gripper.rviz" />
+
+  <param name="robot_description" command="xacro --inorder $(arg model)" />
+  <param name="use_gui" value="$(arg gui)"/>
+
+
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
+
+</launch>
