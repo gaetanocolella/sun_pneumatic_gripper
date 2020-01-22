@@ -25,25 +25,15 @@ using namespace std;
 
 bool activate_suckerSrv(sun_pneumatic_gripper_common::ActivateSucker::Request &req, sun_pneumatic_gripper_common::ActivateSucker::Response &res){
 
-if(req.sucker1 && !req.sucker2_3){
+if((req.sucker1 && !req.sucker2_3) || (req.sucker1 && req.sucker2_3)){
 //attiva sucker1
-ROS_INFO("Activated sucker 1.");
-} else {
-ROS_WARN("Both values are false, turn on almost one value to activate the sucker.");
-}
-
-if(req.sucker2_3 && !req.sucker1){
+ROS_INFO("SUCKER 1 ON");
+} 
+else if ((req.sucker2_3 && !req.sucker1) || (req.sucker2_3 && req.sucker1) ){
 //attiva sucker2 e sucker3
-ROS_INFO("Activated suckers 2 and 3.");
+ROS_INFO("SUCKER 2-3 ON");
 } else {
-ROS_WARN("Both values are false, turn on almost one value to activate the sucker.");
-}
-
-if(req.sucker1 && req.sucker2_3){
-//attiva sucker1,sucker2 e sucker3
-ROS_INFO("Activated all suckers.");
-} else {
-ROS_WARN("Both values are false, turn on almost one value to activate the sucker.");
+ROS_WARN("ALL SUCKERS OFF");
 }
 
 return true;
@@ -93,7 +83,7 @@ while(ros::ok()){
   
 //my_serial.write(b2write,1);
 
-
+ros::spinOnce();
 }
 
 }
