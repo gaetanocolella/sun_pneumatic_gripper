@@ -25,16 +25,24 @@ using namespace std;
 
 bool activate_suckerSrv(sun_pneumatic_gripper_common::ActivateSucker::Request &req, sun_pneumatic_gripper_common::ActivateSucker::Response &res){
 
-if((req.sucker1 && !req.sucker2_3) || (req.sucker1 && req.sucker2_3)){
+if(req.sucker1 && (req.sucker2_3 || !req.sucker2_3)){
 //attiva sucker1
 ROS_INFO("SUCKER 1 ON");
 } 
-else if ((req.sucker2_3 && !req.sucker1) || (req.sucker2_3 && req.sucker1) ){
+else {
+//disattiva sucker1
+ROS_INFO("SUCKER 1 OFF");
+}
+
+if ((req.sucker1 || !req.sucker1) && req.sucker2_3){
 //attiva sucker2 e sucker3
 ROS_INFO("SUCKER 2-3 ON");
-} else {
-ROS_WARN("ALL SUCKERS OFF");
 }
+else {
+//disattiva sucker2 e sucker3
+ROS_INFO("SUCKER 2-3 OFF");
+}
+
 
 return true;
 }
